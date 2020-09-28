@@ -1,0 +1,8 @@
+---
+title: "p8105_hw2_np2619"
+author: "Nidhi Patel"
+date: "9/28/2020"
+output: github_document
+---
+
+Rmd file for hw 2!!
