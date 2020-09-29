@@ -5,4 +5,28 @@ date: "9/28/2020"
 output: github_document
 ---
 
-Rmd file for hw 2!!
+```{r setup}
+library(tidyverse)
+library(tidyr)
+library(readxl)
+```
+
+
+## Problem 1
+```{r Prob_1_trash}
+trash = 
+  read_excel(
+    "./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+    sheet = "Mr. Trash Wheel",
+    range = "A2:N406") %>%
+janitor::clean_names() %>%
+drop_na(dumpster) %>%
+mutate(
+  sports_balls = round(sports_balls),
+  sports_balls = as.integer(sports_balls)
+  )
+  
+
+```
+
+
