@@ -96,16 +96,26 @@ distinct(transit, rt_name, line) %>%
 
 count(transit, ada == "TRUE")
 
-filter(transit, entry == "TRUE") %>% 
+filter(transit, vending == "NO") %>% 
   count()
 
-filter(transit, entry == "TRUE", vending == "NO") %>% 
+filter(transit, vending == "NO", entry == "TRUE") %>% 
   count()
 
-prop = 139/3959
+prop = 139/447
 
 ```
 
 
-There are 259 distinct stations and 1616 stations are ADA compliant.  The proportion of entrances/exits that allow entrance without vending can be found by the the numbers of stations with entrances and without vending (139) over the number of stations with entrances (3959), giving 0.03510988. 
+There are 259 distinct stations and 1616 stations are ADA compliant.  The proportion of stations without vending that allow entrance can be found by the number of stations without vending that allow entrances/exits (139) over the number of stations without vending(447). This is `r prop * 100`%
+
+
+
+## Problem 3
+
+Merging data using Year and month as keys across the 3 datasets. 
+
+```{r}
+
+```
 
