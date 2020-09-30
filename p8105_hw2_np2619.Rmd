@@ -7,12 +7,12 @@ output: github_document
 
 ```{r setup}
 library(tidyverse)
-library(tidyr)
 library(readxl)
 ```
 
 
 ## Problem 1
+###### Clean up Mr. Trash Wheel
 ```{r Prob_1_trash}
 trash = 
   read_excel(
@@ -25,8 +25,41 @@ mutate(
   sports_balls = round(sports_balls),
   sports_balls = as.integer(sports_balls)
   )
-  
 
 ```
+
+###### Clean up precipitation 2017 and 2018
+
+Import datasets + clean a bit
+
+```{r Precipitation}
+precip17 = 
+  read_excel(
+    "./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+    sheet = "2017 Precipitation",
+        range = "A2:B14") %>%
+janitor::clean_names() %>% 
+mutate(year = "2017") %>% 
+  mutate(month = month.name)
+
+precip18 = 
+  read_excel(
+    "./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+    sheet = "2018 Precipitation",
+    range = "A2:B14") %>%
+janitor::clean_names() %>% 
+mutate(year = "2018") %>% 
+  mutate(month = month.name)
+```
+
+###### Join datasets
+
+```{r}
+precipitation = 
+  bind_rows(precip17, precip18)
+```
+
+The precipitation data set looks at amount of rainfall in inches per month for 2017 and 2018.  In 2017, the average precipitation is `r mean(pull(precip17, total))` with the min of `r min(pull(precip17, total))` and max of `r max(pull(precip17, total))`. In 2018, the average monthly precipitation is `r mean(pull(precip18, total))` with a min of `r min(pull(precip18, total))` and max of `r max(pull(precip18, total))`.  For the two years the average precipitation is `r mean(pull(precipitation, total))`.
+
 
 
