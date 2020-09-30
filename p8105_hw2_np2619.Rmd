@@ -26,6 +26,7 @@ mutate(
   sports_balls = as.integer(sports_balls)
   )
 
+
 ```
 
 ###### Clean up precipitation 2017 and 2018
@@ -50,6 +51,7 @@ precip18 =
 janitor::clean_names() %>% 
 mutate(year = "2018") %>% 
   mutate(month = month.name)
+
 ```
 
 ###### Join datasets
@@ -59,7 +61,11 @@ precipitation =
   bind_rows(precip17, precip18)
 ```
 
-The precipitation data set looks at amount of rainfall in inches per month for 2017 and 2018.  In 2017, the average precipitation is `r mean(pull(precip17, total))` with the min of `r min(pull(precip17, total))` and max of `r max(pull(precip17, total))`. In 2018, the average monthly precipitation is `r mean(pull(precip18, total))` with a min of `r min(pull(precip18, total))` and max of `r max(pull(precip18, total))`.  For the two years the average precipitation is `r mean(pull(precipitation, total))`.
+The Mr. Trash Wheel data has `r count(trash)` observations after cleaned.  The median number of sports balls in a dumpster in 2017 is `r median(pull(trash, sports_balls))`. 
 
+The precipitation data set looks at amount of rainfall in inches per month for 2017 and 2018.  In 2017, the average precipitation is `r mean(pull(precip17, total))` with the min of `r min(pull(precip17, total))` and max of `r max(pull(precip17, total))`. In 2018, the average monthly precipitation is `r mean(pull(precip18, total))` with a min of `r min(pull(precip18, total))` and max of `r max(pull(precip18, total))`.  For the two years the average precipitation is `r mean(pull(precipitation, total))` with a total of `r count(precipitation)` observations.  The total precipitation in 2018 is `r sum(pull(precip18, total))`.
+
+
+## Problem 2
 
 
