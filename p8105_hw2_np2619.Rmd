@@ -67,7 +67,7 @@ The precipitation data set looks at amount of rainfall in inches per month for 2
 
 
 ## Problem 2
-
+###### Tidy Transit data
 ```{r}
 transit = 
   read_csv("./NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
@@ -78,9 +78,34 @@ transit =
   pivot_longer(
     route1:route11,
     names_to = "route",
+    names_prefix = "route",
     values_to = "rt_name"
-  )
+  ) %>% 
+  relocate(route, rt_name) %>% 
+  drop_na(rt_name)
+
 ```
 
-First, to tidy this data, I cleaned names and converted the character 'entry' vector to logical.  This dataset had many routes that can be combined into one column, but first all the routes have to match and route8-route11 were converted to characters to match route1-route7. I used `pivot_longer` to tidy the data for easier analysis.
+First, to tidy this data, I cleaned names and converted the character 'entry' vector to logical.  This dataset had many routes that can be combined into one column, but first all the routes have to match and route8-route11 were converted to characters to match route1-route7. I used `pivot_longer` to tidy the data for easier analysis.  In doing so, multiple route columns were combined to one, with their values as 'rt_name'.  After this step, I dropped the NA values of rt_names to remove excess rows from creating a singular 'route' variable.  In total, there are 4,270 observations and 10 vectors (4,270 x 10).  Variables in the dataset include route, rt_name (the subway line at the route), line, station name, station latitude, station longitude, entrance type, entry, vending, and ADA compliance.  
+
+###### Questions
+
+```{r}
+distinct(transit, rt_name, line) %>% 
+  count()
+
+count(transit, ada == "TRUE")
+
+filter(transit, entry == "TRUE") %>% 
+  count()
+
+filter(transit, entry == "TRUE", vending == "NO") %>% 
+  count()
+
+prop = 139/3959
+
+```
+
+
+There are 259 distinct stations and 1616 stations are ADA compliant.  The proportion of entrances/exits that allow entrance without vending can be found by the the numbers of stations with entrances and without vending (139) over the number of stations with entrances (3959), giving 0.03510988. 
 
