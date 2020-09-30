@@ -68,4 +68,19 @@ The precipitation data set looks at amount of rainfall in inches per month for 2
 
 ## Problem 2
 
+```{r}
+transit = 
+  read_csv("./NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  select(line:entry, vending, ada) %>% 
+  mutate(entry = as.logical(recode(entry, "YES" = "TRUE", "NO" = "FALSE"))) %>% 
+  mutate_at(vars(route8:route11), as.character) %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route",
+    values_to = "rt_name"
+  )
+```
+
+First, to tidy this data, I cleaned names and converted the character 'entry' vector to logical.  This dataset had many routes that can be combined into one column, but first all the routes have to match and route8-route11 were converted to characters to match route1-route7. I used `pivot_longer` to tidy the data for easier analysis.
 
