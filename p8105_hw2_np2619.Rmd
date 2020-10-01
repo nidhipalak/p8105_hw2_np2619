@@ -113,8 +113,10 @@ There are 259 distinct stations and 1616 stations are ADA compliant.  The propor
 
 ## Problem 3
 
-Merging data using Year and month as keys across the 3 datasets. 
+Merging data using Year and month as keys across the 3 datasets.
+
 ###### clean + tidy pols-month
+
 ```{r tidypols}
 pols = 
   read_csv("./fivethirtyeight_datasets/pols-month.csv") %>% 
@@ -176,6 +178,24 @@ unemploy =
     jan:dec,
     names_to = "month",
     values_to = "percent"
-  )
+  ) %>% 
+  drop_na(percent)
 ```
 
+###### merge bby merge
+
+```{r}
+merge1 = 
+  left_join(polstidy, snp_tidy, by = c("year", "month"))
+merge2 = 
+  left_join(merge1, unemploy, by = c("year", "month"))
+```
+
+
+
+The first dataset, "pols-month" has the number of national politicians who are democratic or republican at any given time. The resulting, cleaned and tidied data set has `r count(polstidy)` observations across 10 variables.  Key variables are gov_gop, sen_gop, rep_gop, gov_dem, sen_dem, rep_dem indicating the number of republican governers, republican senators, republican representatives, democratic governers, democratic, senators, democratic representatives in a given month and year.  The highest for each category is `r max(pull(polstidy, gov_gop))`, `r max(pull(polstidy,sen_gop))`, `r max(pull(polstidy,rep_gop))`, `r max(pull(polstidy,gov_dem))`, `r max(pull(polstidy,sen_dem))`, `r max(pull(polstidy,rep_dem))`, respectively. This data was taken between `r min(pull(polstidy, year))` and `r max(pull(polstidy, year))`.
+
+The second dataset, "snp" contains the closing values of the S&P stock index on a given month and year (the number is taken on the first, second or third day of the month. The highest closing value of S&P was `r max(pull(snp_tidy, close))` and the lowest was `r min(pull(snp_tidy, close))`. These values were collected between `r min(pull(snp_tidy, year))` and `r max(pull(snp_tidy, year))`.
+
+The last dataset, unemployed has the percentages of unemployment by year.  The highest rate of unemployment was `r max(pull(unemploy, percent))` and the lowest rate was `r min(pull(unemploy, percent))`.
+This data was collected between `r min(pull(unemploy, year))` and `r max(pull(unemploy, year))`
