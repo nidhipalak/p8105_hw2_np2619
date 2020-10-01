@@ -114,7 +114,7 @@ There are 259 distinct stations and 1616 stations are ADA compliant.  The propor
 ## Problem 3
 
 Merging data using Year and month as keys across the 3 datasets. 
-###### clean/tidy pols-month
+###### clean + tidy pols-month
 ```{r tidypols}
 pols = 
   read_csv("./fivethirtyeight_datasets/pols-month.csv") %>% 
@@ -128,36 +128,54 @@ mutate(
 month_df =
   tibble(
     month = 1:12,
-    month_name = month.name
+    month_name = tolower(month.abb)
   )
+
  
 polstidy = 
   left_join(pols, month_df, by = "month") %>% 
-  relocate(year, month_name, prez_gop, prez_dem) %>% 
+  relocate(prez_gop, prez_dem) %>% 
   pivot_longer(
     prez_gop:prez_dem, 
     names_to = "president",
     names_prefix = "prez_",
     values_to = "partyaffil") %>% 
-  select(year:month_name, gov_gop:partyaffil)
+    mutate(month = month_name) %>% 
+    select(year:month, gov_gop:rep_dem, president:partyaffil) 
+
 
 ```
 
-###### clean snp
+###### clean + tidy snp
 
 ```{r tidysnp}
 snp = 
   read_csv("./fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>% 
   separate(date, into = c("month", "day", "year")) %>% 
-  mutate(
-    year = as.integer(year),
-    month = as.integer(month) 
-)
+ mutate(
+  year = as.integer(year),
+  month = as.integer(month)
+  )
+
 snp_tidy = 
   left_join(snp, month_df, by = "month") %>%
   relocate(year, month_name) %>% 
-  select(year, month_name, close)
+  mutate(month = month_name) %>% 
+  select(year, month, close)
 
+```
+
+###### clean + tidy unemployment
+
+```{r}
+unemploy = 
+  read_csv("./fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    jan:dec,
+    names_to = "month",
+    values_to = "percent"
+  )
 ```
 
