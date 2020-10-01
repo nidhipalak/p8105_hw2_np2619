@@ -56,7 +56,7 @@ mutate(year = "2018") %>%
 
 ###### Join datasets
 
-```{r}
+```{r bindrows}
 precipitation = 
   bind_rows(precip17, precip18)
 ```
@@ -68,7 +68,7 @@ The precipitation data set looks at amount of rainfall in inches per month for 2
 
 ## Problem 2
 ###### Tidy Transit data
-```{r}
+```{r prob2}
 transit = 
   read_csv("./NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
   janitor::clean_names() %>% 
@@ -90,7 +90,7 @@ First, to tidy this data, I cleaned names and converted the character 'entry' ve
 
 ###### Questions
 
-```{r}
+```{r QProb2}
 distinct(transit, rt_name, line) %>% 
   count()
 
@@ -114,16 +114,15 @@ There are 259 distinct stations and 1616 stations are ADA compliant.  The propor
 ## Problem 3
 
 Merging data using Year and month as keys across the 3 datasets. 
-
-```{r}
+###### clean/tidy pols-month
+```{r tidypols}
 pols = 
   read_csv("./fivethirtyeight_datasets/pols-month.csv") %>% 
   janitor::clean_names() %>% 
   separate(mon, into = c("year", "month", "day")) %>% 
 mutate(
   year = as.integer(year),
-  month = as.integer(month),
-  day = as.integer(day)
+  month = as.integer(month)
   )
  
 month_df =
@@ -141,10 +140,24 @@ polstidy =
     names_prefix = "prez_",
     values_to = "partyaffil") %>% 
   select(year:month_name, gov_gop:partyaffil)
-  
-  
-   
-  
+
+```
+
+###### clean snp
+
+```{r tidysnp}
+snp = 
+  read_csv("./fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(date, into = c("month", "day", "year")) %>% 
+  mutate(
+    year = as.integer(year),
+    month = as.integer(month) 
+)
+snp_tidy = 
+  left_join(snp, month_df, by = "month") %>%
+  relocate(year, month_name) %>% 
+  select(year, month_name, close)
 
 ```
 
